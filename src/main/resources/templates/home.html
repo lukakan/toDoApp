@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+</head>
+<body>
+
+<main class="container" role="main" layout:fragment="content">
+
+    <div class="tasks-container">
+            <h2>ACTIVE TASKS</h2>
+        <hr class="solid">
+        <ul class="row">
+                <li class="col-12 col-md-6 col-lg-4" th:each="task:${activeTasks}" th:object="${task}">
+                    <div class="task">
+                            <div class="task-header new-task-header" th:with="someVariable=${task.targetDate}" th:classappend="${task.targetDate.isAfter(currentDate) ? ' new-task-header' : 'obsolate-task-header'}">
+                                <p class="title" th:text="*{title}">Title #1</p>
+                                <div class="task-header-detail">
+                                    <p class="date" th:text="|target date: *{targetDate}|">target date: 2021-04-01</p>
+                                    <p class="category" th:text="|category: *{taskCategory}|">category: homework</p>
+                                </div>
+                                <div class="mini-menu">
+                                    <div><a th:href="@{/complete?id={id}(id=${task.id})}" class="complete-button"> <i class="fas fa-check-circle"></i></a></div>
+                                    <div><a th:href="@{/update?id={id}(id=${task.id})}" class="edit-button"> <i class="fas fa-wrench"></i></a></div>
+                                </div>
+                            </div>
+                            <p class="task-content new-task-content" th:classappend="${task.targetDate.isAfter(currentDate) ? ' new-task-content' : 'obsolate-task-content'}" th:text="*{description}">Text Content #1</p>
+                    </div>
+                </li>
+        </ul>
+    </div>
+
+    <div class="tasks-container">
+        <h2>COMPLETED TASKS</h2>
+        <hr class="solid">
+        <ul class="row">
+            <li class="col-12 col-md-6 col-lg-4" th:each="task:${completedTasks}" th:object="${task}">
+                <div class="task">
+                    <div class="task-header completed-task-header">
+                        <p class="title" th:text="*{title}">Title #1</p>
+                        <div class="task-header-detail">
+                            <p class="date" th:text="|target date: *{targetDate}|">target date: 2021-04-01</p>
+                            <p class="category" th:text="|category: *{taskCategory}|">category: homework</p>
+                        </div>
+                        <div class="mini-menu">
+                            <div><a th:href="@{/update?id={id}(id=${task.id})}" class="edit-button"> <i class="fas fa-wrench"></i></a></div>
+                        </div>
+                    </div>
+                    <p class="task-content completed-task-content" th:text="*{description}">Text Content #1</p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</main>
+
+</body>
+</html>

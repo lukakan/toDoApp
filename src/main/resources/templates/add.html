@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ADD NEW TASK</title>
+
+</head>
+
+<body>
+    <main class="container" role="main" layout:fragment="content">
+        <form th:method="post" th:action="${action} == 'add' ? @{/add} : @{/update}" th:object="${task}" name="add new task" onsubmit="return validateForm()">
+            <div class="d-flex justify-content-center mt-5">
+                <div class="col-10 col-md-5 mt-5">
+                    <div class="m-3" th:if="${editmode == true}">
+                        <label for="id" class="form-label">ID</label>
+                        <input type = text th:field="*{id}" id="id" class="form-control" readonly>
+                    </div>
+                    <div class="m-3">
+                        <div id="title-info" class="validator"></div>
+                        <label for="title" class="form-label">Task title</label>
+                        <input id ="title" type="text" class="form-control" th:field="*{title}">
+
+                        <label for="category" class="form-label">Task Category</label>
+                        <select id="category" class="form-control" th:field = "*{taskCategory}">
+                            <option value="" disabled selected hidden>Choose</option>
+                            <option th:value="COURSE">Course</option>
+                            <option th:value ="HOMEWORK">Homework</option>
+                            <option th:value ="WORK">Work</option>
+                            <option th:value ="TRAINING">Training</option>
+                            <option th:value ="SHOPPING">Shopping</option>
+                        </select>
+                    </div>
+                    <div class="m-3">
+                        <label for="target-date" class="form-label">Due date</label>
+                        <input class="form-control" type="date" id="target-date" th:field="*{targetDate}">
+                    </div>
+                    <div class="m-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" class="form-control" rows="8" th:field="*{description}"></textarea>
+                    </div>
+                    <div class="m-3" th:if="${editmode == true}">
+                        <label for="task-status" class="form-label">Status</label>
+                        <select id="task-status" class="form-control" th:field = "*{taskStatus}">
+                            <option value="" disabled selected hidden>Choose</option>
+                            <option th:value="ACTIVE">Active</option>
+                            <option th:value ="COMPLETED">Completed</option>
+                        </select>
+                    </div>
+                    <div class="m-3" th:unless="${editmode==true}">
+                        <button type="submit" class="btn btn-dark px-3" id="form-button1">Add task</button>
+                    </div>
+                    <div class="m-3" th:if="${editmode==true}">
+                        <button type="submit" class="btn btn-dark px-3" id="form-button2">Update task</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <script src="myScript.js"></script>
+    </main>
+</body>
+</html>

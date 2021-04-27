@@ -19,3 +19,9 @@ Extra features:
 
 ---
 *Used tech:*
+* Spring MVC
+* Spring boot 
+* Spring data
+* Thymeleaf
+* Html, css, js
+
