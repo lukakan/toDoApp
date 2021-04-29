@@ -27,8 +27,8 @@ public class MainController {
     @GetMapping("/")
     public String homePage(Model model) {
         List<Task> all = taskService.findAll();
-        List<Task> activeTasks = taskService.findActive(all);
-        List<Task> completedTasks = taskService.findCompleted(all);
+        List<Task> activeTasks = taskService.filterActive(all);
+        List<Task> completedTasks = taskService.filterCompleted(all);
         LocalDate currentDate = LocalDate.now();
         model.addAttribute("activeTasks", activeTasks);
         model.addAttribute("completedTasks", completedTasks);

@@ -8,6 +8,7 @@ import pl.lukakan.todoapp.repository.TaskRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class TaskService {
         if (task.isPresent()) {
             return task.get();
         } else {
-            throw new IllegalArgumentException("unknown id");
+            throw new NoSuchElementException("element with provided id doesn't exists");
         }
     }
 
@@ -49,11 +50,11 @@ public class TaskService {
         return taskRepository.findAllByOrderByTargetDateAsc();
     }
 
-    public List<Task> findActive(List<Task> all) {
+    public List<Task> filterActive(List<Task> all) {
         return getTasksInGivenStatus(all, TaskStatus.ACTIVE);
     }
 
-    public List<Task> findCompleted(List<Task> all) {
+    public List<Task> filterCompleted(List<Task> all) {
         return getTasksInGivenStatus(all, TaskStatus.COMPLETED);
     }
 
