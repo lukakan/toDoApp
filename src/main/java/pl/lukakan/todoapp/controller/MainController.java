@@ -6,28 +6,29 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pl.lukakan.todoapp.service.TaskService;
 import pl.lukakan.todoapp.model.Task;
+import pl.lukakan.todoapp.model.TaskCategory;
 import pl.lukakan.todoapp.model.TaskStatus;
-import pl.lukakan.todoapp.repository.TaskRepository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class MainController {
 
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
 
     @Autowired
-    public MainController(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public MainController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
     @GetMapping("/")
     public String homePage(Model model) {
-        List<Task> activeTasks = taskRepository.findByTaskStatusOrderByTargetDateAsc(TaskStatus.ACTIVE);
-        List<Task> completedTasks = taskRepository.findByTaskStatusOrderByTargetDateAsc(TaskStatus.COMPLETED);
+        List<Task> all = taskService.findAll();
+        List<Task> activeTasks = taskService.findActive(all);
+        List<Task> completedTasks = taskService.findCompleted(all);
         LocalDate currentDate = LocalDate.now();
         model.addAttribute("activeTasks", activeTasks);
         model.addAttribute("completedTasks", completedTasks);
@@ -38,6 +39,7 @@ public class MainController {
     @GetMapping("/add")
     public String addTaskPage(Model model) {
         model.addAttribute("task", new Task());
+        model.addAttribute("taskCategory", TaskCategory.values());
         model.addAttribute("editmode", false);
         model.addAttribute("action", "add");
         return "add";
@@ -45,18 +47,16 @@ public class MainController {
 
     @PostMapping("/add")
     public String addTask(Task task) {
-        task.setTaskStatus(TaskStatus.ACTIVE);
-        if (task.getTargetDate() == null) {
-            task.setTargetDate(LocalDate.of(9999, 1, 1));
-        }
-        taskRepository.save(task);
+        taskService.save(task);
         return "redirect:/";
     }
 
     @GetMapping("/update")
     public String editTaskPage(@RequestParam ("id") Long id, Model model) {
-        Optional<Task> editTask = taskRepository.findById(id);
-        model.addAttribute("task", editTask.get());
+        Task editTask = taskService.findById(id);
+        model.addAttribute("task", editTask);
+        model.addAttribute("taskCategory", TaskCategory.values());
+        model.addAttribute("taskStatuses", TaskStatus.values());
         model.addAttribute("editmode", true);
         model.addAttribute("action", "edit");
         return "add";
@@ -64,20 +64,13 @@ public class MainController {
 
     @PostMapping("/update")
     public String saveUpdatedTask(Task task, Model model) {
-        if (task.getTargetDate() == null) {
-            task.setTargetDate(LocalDate.of(9999, 1, 1));
-        }
-        taskRepository.save(task);
+        taskService.save(task);
         return "redirect:/";
     }
 
     @GetMapping("/complete")
     public String markAsComplete(@RequestParam("id") Long id) {
-        Optional<Task> foundTask = taskRepository.findById(id);
-        if (foundTask.isPresent()) {
-            foundTask.get().setTaskStatus(TaskStatus.COMPLETED);
-            taskRepository.save(foundTask.get());
-        }
+        taskService.markAsCompleted(id);
         return "redirect:/";
     }
 }

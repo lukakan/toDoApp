@@ -24,11 +24,7 @@
                         <label for="category" class="form-label">Task Category</label>
                         <select id="category" class="form-control" th:field = "*{taskCategory}">
                             <option value="" disabled selected hidden>Choose</option>
-                            <option th:value="COURSE">Course</option>
-                            <option th:value ="HOMEWORK">Homework</option>
-                            <option th:value ="WORK">Work</option>
-                            <option th:value ="TRAINING">Training</option>
-                            <option th:value ="SHOPPING">Shopping</option>
+                            <option th:each="category:${taskCategory}" th:text="${category}" th:value="${category}">Course</option>
                         </select>
                     </div>
                     <div class="m-3">
@@ -43,8 +39,7 @@
                         <label for="task-status" class="form-label">Status</label>
                         <select id="task-status" class="form-control" th:field = "*{taskStatus}">
                             <option value="" disabled selected hidden>Choose</option>
-                            <option th:value="ACTIVE">Active</option>
-                            <option th:value ="COMPLETED">Completed</option>
+                            <option th:each="status:${taskStatuses}" th:text="${status}" th:value="${status}">Active</option>
                         </select>
                     </div>
                     <div class="m-3" th:unless="${editmode==true}">

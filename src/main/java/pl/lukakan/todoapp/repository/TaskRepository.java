@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    public List<Task> findByTaskStatusOrderByTargetDateAsc(TaskStatus taskStatus);
+    List<Task> findAllByOrderByTargetDateAsc();
 }
